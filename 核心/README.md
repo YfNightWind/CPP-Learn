@@ -91,9 +91,60 @@ C++程序在执行时，将内存大方向划分为**4个区域**
 
   ```cpp
   int a = 10;
-  int &b = a; // b也有了操作地址a的权限
+int &b = a; // b也有了操作地址a的权限
   ```
 
 注意事项⚠️：  
 引用必须初始化```int &b;❌```  
 引用一旦初始化之后不得再更改引用，比如再次```int &c = a;```
+
+- ### 引用传递:
+
+  ```cpp 
+  void swap(int &a, int &b) {
+    int temp = a;
+    a = b;
+    b = temp; 
+  }
+  
+  int main() {
+    int a = 10;
+    int b = 20;
+    swap(a, b); // 结果交换了
+  }
+  ```
+- ### 引用做函数的返回值:
+  注意事项⚠️：  
+  1.不要返回局部变量的引用
+  ```cpp
+  int &test() {
+    int a = 10;
+    return a; 
+  }
+  
+  int main() {
+    int &ref = test();
+    cout << ref; // 10，因为编译器做了保留
+    cout << ref; // 结果❌，因为a的内存已经释放
+    return 0;
+  }
+  ```
+  2.函数的调用可以作为左值存在
+  ```cpp
+  int &test() {
+    static int a = 10;
+    return a; 
+  }
+  
+  int main() {
+    int &ref = test();
+    cout << ref; 
+    cout << ref; // 这里就是10了，因为static存放在全局区
+    
+    test() = 1000; // 如果函数的返回值是引用，这个函数调用可以作为左值❗️
+    cout << ref; // 1000，因为是引用，相当于做了a = 1000的操作，ref相当于a的别名
+    return 0;
+  }
+  ```
+- ### 引用的本质：
+  **本质在C++内部实现的是一个指针常量**
