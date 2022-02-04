@@ -39,15 +39,48 @@ class Entity {
   Entity() {
     X = 0.0f;
     Y = 0.0f;
+    std::cout << "Created Entity" << std::endl;
   }
 
-  // 带参数的构造函数
+  /*带参数的构造函数
+
   Entity(float x, float y) {
     X = x;
     Y = y;
   }
+
+   */
+
+  // 析构函数
+  // 也就是一个在对象销毁时会被调用的特殊的函数和方法
+  // 可以手动调用：例如这里我在main函数里实例化里一个叫做entity，即entity.~Entity();
+  ~Entity() {
+    std::cout << "Destroyed Entity!" << std::endl;
+  }
+
   void Print() {
     std::cout << X << ", " << Y << std::endl;
+  }
+};
+
+class Father {
+ public:
+  float x, y;
+
+  void Move(float xa, float ya) {
+    x += xa;
+    y += ya;
+  }
+
+};
+
+// 可以访问父类非private的内容，实例化之后变可以访问自己和父类的变量和方法
+class Son : public Father {
+ public:
+  const char *name;
+
+  void PrintName() {
+    std::cout << name << std::endl;
   }
 };
 
@@ -57,7 +90,8 @@ int main() {
   log.Warn("Shit");
   log.Error("shit");
   log.Info("shit");
-  Entity entity(1.00, 2.00);
+//  Entity entity(1.00, 2.00); 有参数构造时候可以这么实例化
+  Entity entity;
   entity.Print();
   return 0;
 }
