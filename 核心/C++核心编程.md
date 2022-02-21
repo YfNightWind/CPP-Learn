@@ -2031,13 +2031,15 @@ public:
 	Person(int age)
 	{
 		//1、当形参和成员变量同名时，可用this指针来区分
+    //this指针指向 被调用的成员函数 所属的对象
 		this->age = age;
 	}
-
-	Person& PersonAddPerson(Person p)
+	// 这里注意，开头的Person有引用，可以理解为一直引用p2，所以下面的链式引用会一直加10，也就是40
+  // 如果我把这里的&去掉，也就是拷贝构造函数，只是不断的复制，所以结果是20
+	Person& PersonAddPerson(Person &p)
 	{
 		this->age += p.age;
-		//返回对象本身
+		//this指向p2的指针，而*this指向的就是p2这个对象本体
 		return *this;
 	}
 
@@ -2050,7 +2052,7 @@ void test01()
 	cout << "p1.age = " << p1.age << endl;
 
 	Person p2(10);
-	p2.PersonAddPerson(p1).PersonAddPerson(p1).PersonAddPerson(p1);
+	p2.PersonAddPerson(p1).PersonAddPerson(p1).PersonAddPerson(p1); // p2的年龄为40
 	cout << "p2.age = " << p2.age << endl;
 }
 
@@ -2096,6 +2098,7 @@ public:
 	}
 
 	void ShowPerson() {
+    // 加上了这个if后，就不会执行到下面的cout，就不会报错
 		if (this == NULL) {
 			return;
 		}
@@ -2167,7 +2170,7 @@ public:
 	//this指针的本质是一个指针常量，指针的指向不可修改
 	//如果想让指针指向的值也不可以修改，需要声明常函数
 	void ShowPerson() const {
-		//const Type* const pointer;
+		//上述相当于const Type* const pointer;
 		//this = NULL; //不能修改指针的指向 Person* const this;
 		//this->mA = 100; //但是this指针指向的对象的数据是可以修改的
 
@@ -2258,7 +2261,7 @@ class Building
 	friend void goodGay(Building * building);
 
 public:
-
+	// 构造函数
 	Building()
 	{
 		this->m_SittingRoom = "客厅";
@@ -2377,7 +2380,7 @@ class Building;
 class goodGay
 {
 public:
-
+	//类外实现构造函数
 	goodGay();
 	void visit(); //只让visit函数作为Building的好朋友，可以发访问Building中私有内容
 	void visit2(); 
@@ -2393,7 +2396,7 @@ class Building
 	friend void goodGay::visit();
 
 public:
-	Building();
+	Building();//类外实现构造函数
 
 public:
 	string m_SittingRoom; //客厅
@@ -2401,12 +2404,13 @@ private:
 	string m_BedRoom;//卧室
 };
 
+//类外实现构造函数
 Building::Building()
 {
 	this->m_SittingRoom = "客厅";
 	this->m_BedRoom = "卧室";
 }
-
+//类外实现构造函数
 goodGay::goodGay()
 {
 	building = new Building;
@@ -2476,6 +2480,7 @@ public:
 	//成员函数实现 + 号运算符重载
 	Person operator+(const Person& p) {
 		Person temp;
+    // 自身的m_A + 传进来的m_A
 		temp.m_A = this->m_A + p.m_A;
 		temp.m_B = this->m_B + p.m_B;
 		return temp;
@@ -4759,7 +4764,7 @@ C++中对文件操作需要包含头文件 ==&lt; fstream &gt;==
 
    ofs.close();
 
-   ​
+   
 
 文件打开方式：
 
