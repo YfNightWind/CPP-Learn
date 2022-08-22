@@ -218,4 +218,27 @@
       cout << s->name;
     }
     ```
-  Date: 2021.11.27
+
+- ##### struct中的内存对齐
+    属于典型的**空间换时间**的做法
+    举个例子：
+    ```cpp
+    struct example 
+    {
+        int x;
+        char y[10];
+        char z;
+    } example;
+
+    int main()
+    {
+        std::cout << sizeof(example) << std::endl; // 结果为16，而非15
+        return 0;
+    }
+    ```
+    - 在内存中，尽管是以字节为单位，但大多数处理器不是按照字节来存取的。它一般会以2的次幂为单位来存储（如32位系统以4的倍数来存取）
+    **如下图** 
+    ![](assets/DataStructureAlignment.png)
+    这样子做的意义就可以减少计算机访存次数
+    
+  Date: 2022.08.23
